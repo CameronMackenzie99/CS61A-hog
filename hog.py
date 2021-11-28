@@ -85,7 +85,11 @@ def is_swap(player_score, opponent_score):
     Return whether the two scores should be swapped
     """
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    excitement = str(3 ** (player_score + opponent_score))
+    if excitement[0] == excitement[-1]:
+        return True
+    else:
+        return False
     # END PROBLEM 4
 
 
