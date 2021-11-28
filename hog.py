@@ -23,7 +23,7 @@ def roll_dice(num_rolls, dice=six_sided):
     # BEGIN PROBLEM 1
     turn_total = 0
     pig_out = False
-    
+
     for i in range(num_rolls):
         roll = dice()
         turn_total += roll
@@ -44,7 +44,19 @@ def free_bacon(score):
     """
     assert score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    turn_total = 1
+    alt_difference = 0
+    flag = 1 # alternates the addition and subtraction of consecutive digits
+    digits = str(score**3)
+    digit_array = [int(i) for i in digits]
+    for digit in digit_array:
+        if flag > 0:
+            alt_difference += digit
+        else:
+            alt_difference -= digit
+        flag *= -1
+    turn_total += abs(alt_difference)
+    return turn_total
     # END PROBLEM 2
 
 
