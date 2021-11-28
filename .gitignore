@@ -1,5 +1,7 @@
-*.ok.*
+.ok.*
 tests/
+ok
+*.ok
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
