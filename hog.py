@@ -129,33 +129,34 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    prev_s0 = 0
-    prev_s1 = 0
+    scored_s0, scored_s1 = 0, 0 # defining points scored on each turn (excluding feral hogs and swine swap)
+    prev_scored_s0, prev_scored_s1 = 0, 0 # points scored by each player in their previous (excluding feral hogs and swine swap)
     while score0 < goal and score1 < goal:
         if who == 0:
             strategy = strategy0(score0, score1)
-            prev_scored_s0 = score0 - prev_s0
-            prev_s0 = score0
-            score0 += take_turn(strategy, score1, dice)
+            scored_s0 = take_turn(strategy, score1, dice)
+            score0 += scored_s0
+            
         else:
             strategy = strategy1(score1, score0)
-            prev_scored_s1 = score1 - prev_s1
-            prev_s1 = score1
-            score1 +=  take_turn(strategy, score0, dice)
+            scored_s1 = take_turn(strategy, score0, dice)
+            score1 += scored_s1
 
         if feral_hogs:
-            if who is 0 and abs(strategy - prev_scored_s0) == 2:
+            if who == 0 and abs(strategy - prev_scored_s0) == 2:
                 score0 += 3
-                prev_s0 += 3 # to ensure that any future feral hogs don't account for previous
-            elif who is 1 and abs(strategy - prev_scored_s1) == 2:
+                prev_scored_s0 += 3 # to ensure that any future feral hogs don't account for previous
+            elif who == 1 and abs(strategy - prev_scored_s1) == 2:
                 score1 += 3
-                prev_s1 += 3
-
+                prev_scored_s1 += 3 # to ensure that any future feral hogs don't account for previous
+        
+        prev_scored_s0 = scored_s0 # storing points scored by player for reference in their next turn.
+        prev_scored_s1 = scored_s1 
+        
         if is_swap(score0, score1):
             score0, score1 = score1, score0
 
         who = other(who)
-
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
