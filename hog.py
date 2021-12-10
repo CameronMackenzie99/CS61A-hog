@@ -74,16 +74,22 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls, dice)
     # END PROBLEM 3
-
 
 def is_swap(player_score, opponent_score):
     """
     Return whether the two scores should be swapped
     """
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    excitement = str(3 ** (player_score + opponent_score))
+    if excitement[0] == excitement[-1]:
+        return True
+    else:
+        return False
     # END PROBLEM 4
 
 
@@ -123,11 +129,37 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    scored_s0, scored_s1 = 0, 0 # defining points scored on each turn (excluding feral hogs and swine swap)
+    prev_scored_s0, prev_scored_s1 = 0, 0 # points scored by each player in their previous (excluding feral hogs and swine swap)
+    while score0 < goal and score1 < goal:
+        if who == 0:
+            strategy = strategy0(score0, score1)
+            scored_s0 = take_turn(strategy, score1, dice)
+            score0 += scored_s0
+            
+        else:
+            strategy = strategy1(score1, score0)
+            scored_s1 = take_turn(strategy, score0, dice)
+            score1 += scored_s1
+
+        if feral_hogs:
+            if who == 0 and abs(strategy - prev_scored_s0) == 2:
+                score0 += 3
+                prev_scored_s0 += 3 # to ensure that any future feral hogs don't account for previous
+            elif who == 1 and abs(strategy - prev_scored_s1) == 2:
+                score1 += 3
+                prev_scored_s1 += 3 # to ensure that any future feral hogs don't account for previous
+        
+        prev_scored_s0 = scored_s0 # storing points scored by player for reference in their next turn.
+        prev_scored_s1 = scored_s1 
+        
+        if is_swap(score0, score1):
+            score0, score1 = score1, score0
+
+        who = other(who)
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
     # END PROBLEM 6
     return score0, score1
 
